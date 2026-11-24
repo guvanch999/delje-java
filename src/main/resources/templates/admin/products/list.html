@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin}">
+<body>
+<th:block layout:fragment="content">
+<div class="toolbar">
+  <h1>Товары <span class="muted" style="font-size: 15px; font-weight: 400;" th:text="|(${count})|"></span></h1>
+  <div style="display: flex; gap: 12px; align-items: center;">
+    <form class="search" method="get" action="/admin/products">
+      <input type="text" name="q" th:value="${q}" placeholder="Поиск по названию" />
+      <button type="submit" class="btn btn--secondary">Найти</button>
+      <a th:if="${q != ''}" class="btn btn--link" href="/admin/products">Сброс</a>
+    </form>
+    <a class="btn btn--primary" href="/admin/products/new">Добавить товар</a>
+  </div>
+</div>
+
+<div th:if="${products.isEmpty()}" class="empty">
+  <th:block th:if="${q != ''}" th:text="|Ничего не найдено по запросу «${q}».|"></th:block>
+  <th:block th:unless="${q != ''}">Товаров пока нет.</th:block>
+</div>
+<th:block th:unless="${products.isEmpty()}">
+  <table class="list">
+    <thead>
+      <tr>
+        <th style="width: 64px;">Фото</th>
+        <th>Название</th>
+        <th>Категория</th>
+        <th style="width: 120px;">Цена</th>
+        <th style="width: 60px;">Топ</th>
+        <th style="width: 200px;">Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="p : ${products}">
+        <td>
+          <img th:if="${p.mainImage != null}" class="thumb" th:src="${p.mainImage.thumb}" alt="" />
+          <span th:if="${p.mainImage == null}" class="muted">—</span>
+        </td>
+        <td th:text="${p.name}"></td>
+        <td class="muted" th:text="${p.category != null ? p.category.name : '—'}"></td>
+        <td th:text="${@fmt.adminPrice(p.price)}"></td>
+        <td>
+          <span th:if="${p.top}" class="badge badge--on">Топ</span>
+          <span th:unless="${p.top}" class="muted">—</span>
+        </td>
+        <td>
+          <div class="actions">
+            <a class="btn btn--secondary btn--sm" th:href="|/admin/products/${p.id}/edit|">Изменить</a>
+            <form class="inline-form" method="post" th:action="|/admin/products/${p.id}/delete|"
+                  th:data-confirm="|Удалить товар «${p.name}»?|">
+              <button type="submit" class="btn btn--danger btn--sm">Удалить</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div th:if="${pages > 1}" class="pagination">
+    <a th:if="${page > 1}" th:href="${pageUrl + (page - 1)}">← Назад</a>
+    <span th:unless="${page > 1}" class="disabled">← Назад</span>
+
+    <th:block th:each="n : ${#numbers.sequence(1, pages)}">
+      <span th:if="${n == page}" class="current" th:text="${n}"></span>
+      <a th:unless="${n == page}" th:href="${pageUrl + n}" th:text="${n}"></a>
+    </th:block>
+
+    <a th:if="${page < pages}" th:href="${pageUrl + (page + 1)}">Вперёд →</a>
+    <span th:unless="${page < pages}" class="disabled">Вперёд →</span>
+  </div>
+</th:block>
+</th:block>
+</body>
+</html>

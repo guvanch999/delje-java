@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<body>
+<th:block layout:fragment="content">
+<section class="page container">
+  <p class="eyebrow" th:text="#{about.eyebrow}"></p>
+  <h1 th:text="#{about.title}"></h1>
+  <div class="prose">
+    <p th:text="#{about.p1}"></p>
+    <p th:text="#{about.p2}"></p>
+    <h2 th:text="#{about.whyTitle}"></h2>
+    <ul>
+      <li th:text="#{about.li1}"></li>
+      <li th:text="#{about.li2}"></li>
+      <li th:text="#{about.li3}"></li>
+      <li th:text="#{about.li4}"></li>
+    </ul>
+    <p>
+      <th:block th:text="#{about.haveQuestion}"></th:block> <a th:href="|/${lang}/contact|" th:text="#{about.writeUs}"></a>
+      <th:block th:text="#{about.orInstagram}"></th:block>
+      <a href="https://instagram.com/delje_brand" target="_blank" rel="noopener">@delje_brand</a>
+      <th:block th:text="#{about.replySoon}"></th:block>
+    </p>
+  </div>
+</section>
+</th:block>
+</body>
+</html>

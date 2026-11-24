@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin}">
+<body>
+<th:block layout:fragment="content">
+<h1>Новый баннер</h1>
+
+<div th:if="${error != null}" class="flash flash--error" th:text="${error}"></div>
+
+<!-- csrf token is also in the URL: it must survive a rejected (too large) upload -->
+<form class="card" method="post" enctype="multipart/form-data" th:action="@{/admin/banners(_csrf=${_csrf.token})}">
+  <div class="field">
+    <label for="image">Картинка</label>
+    <input type="file" id="image" name="image" accept="image/*" />
+    <div class="hint">Будет уменьшена до 1920×700 (WebP).</div>
+  </div>
+
+  <div class="field">
+    <label for="title">Заголовок (RU)</label>
+    <input type="text" id="title" name="title" th:value="${values.title}" />
+  </div>
+
+  <div class="field">
+    <label for="titleTk">Заголовок (TK)</label>
+    <input type="text" id="titleTk" name="titleTk" th:value="${values.titleTk}" />
+    <div class="hint">Туркменский перевод заголовка. Если пусто — покажется русский.</div>
+  </div>
+
+  <div class="field">
+    <label for="link">Ссылка</label>
+    <input type="text" id="link" name="link" th:value="${values.link}" placeholder="/products" />
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn--primary">Сохранить</button>
+    <a class="btn btn--secondary" href="/admin/banners">Отмена</a>
+  </div>
+</form>
+</th:block>
+</body>
+</html>

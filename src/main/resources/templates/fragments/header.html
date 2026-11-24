@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- On the home page the header is transparent over the dark hero, elsewhere it is a regular bar. -->
+<header th:fragment="header" class="site-header" th:classappend="${isHome} ? 'site-header--overlay'">
+  <div class="container site-header__inner">
+    <a class="brand" th:href="|/${lang}|" th:aria-label="#{brand.aria}">
+      <img class="brand__logo" src="/static/favicon.svg" alt="" width="40" height="40" />
+      <span class="brand__word">DELJE</span>
+    </a>
+    <button class="nav-toggle" type="button" th:aria-label="#{nav.menuAria}" aria-expanded="false" onclick="this.closest('.site-header').classList.toggle('is-open'); this.setAttribute('aria-expanded', this.closest('.site-header').classList.contains('is-open'));">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="site-nav" th:aria-label="#{nav.mainMenuAria}">
+      <ul>
+        <li th:each="item : ${navItems}">
+          <a th:href="${item.href}" class="site-nav__link" th:classappend="${item.active} ? 'is-active'"
+             th:attr="aria-current=${item.active ? 'page' : null}" th:text="${item.label}"></a>
+        </li>
+      </ul>
+      <div class="lang-switch" role="group" th:aria-label="#{lang.switchAria}">
+        <a th:each="l : ${langLinks}" class="lang-switch__link" th:classappend="${l.active} ? 'is-active'"
+           th:href="${l.href}" th:attr="aria-current=${l.active ? 'true' : null}" th:hreflang="${l.code}" th:text="${l.label}"></a>
+      </div>
+      <button class="theme-toggle" type="button" th:aria-label="#{theme.toggleAria}" aria-pressed="false" th:title="#{theme.toggleAria}">
+        <svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+        </svg>
+        <svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>
+</body>
+</html>

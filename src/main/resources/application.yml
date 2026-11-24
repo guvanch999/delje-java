@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: delje-shop
+  config:
+    # local runs read the same .env file that systemd / docker compose use
+    import: optional:file:.env[.properties]
+  main:
+    banner-mode: off
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    # an existing database that already has the catalog tables (no Flyway history yet)
+    # is taken over as version 1, only newer migrations run there
+    baseline-on-migrate: true
+    baseline-version: 1
+
+  session:
+    timeout: 7d
+    jdbc:
+      initialize-schema: never
+
+  servlet:
+    multipart:
+      max-file-size: 8MB
+      max-request-size: 100MB
+
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+
+  web:
+    resources:
+      add-mappings: false
+
+  thymeleaf:
+    cache: true
+
+server:
+  port: ${PORT:3000}
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  forward-headers-strategy: native
+  shutdown: graceful
+  servlet:
+    session:
+      cookie:
+        name: DELJE_SESSION
+        http-only: true
+        same-site: lax
+        secure: ${COOKIE_SECURE:false}
+  tomcat:
+    # read the rest of a too-large upload, otherwise the browser just sees a reset connection
+    max-swallow-size: 110MB
+  error:
+    whitelabel:
+      enabled: false
+
+logging:
+  level:
+    root: ${LOG_LEVEL:info}
+
+app:
+  site-url: ${SITE_URL:http://localhost:3000}
+  database-url: ${DATABASE_URL:postgres://shop:password@localhost:5432/shop}
+  cookie-secure: ${COOKIE_SECURE:false}
+  uploads-dir: ${UPLOADS_DIR:uploads}
+  backups-dir: ${BACKUPS_DIR:backups}
+  import-dir: ${IMPORT_DIR:import}
+  admin:
+    login: ${ADMIN_LOGIN:admin}
+    password-hash: ${ADMIN_PASSWORD_HASH:}
+  mail:
+    resend-api-url: ${RESEND_API_URL:https://api.resend.com/emails}
+    resend-api-key: ${RESEND_API_KEY:}
+    admin-email: ${ADMIN_EMAIL:}
+    from: ${MAIL_FROM:DELJE <onboarding@resend.dev>}
+  backup:
+    enabled: ${BACKUP_ENABLED:false}
+    cron: ${BACKUP_CRON:0 0 3 * * *}
+    pg-dump-path: ${PG_DUMP_PATH:pg_dump}
+    retention-days: 14

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin}">
+<body>
+<th:block layout:fragment="content">
+<div class="toolbar">
+  <h1>Баннеры</h1>
+  <a class="btn btn--primary" href="/admin/banners/new">Добавить баннер</a>
+</div>
+
+<div th:if="${banners.isEmpty()}" class="empty">Баннеров пока нет.</div>
+<table th:unless="${banners.isEmpty()}" class="list">
+  <thead>
+    <tr>
+      <th style="width: 140px;">Картинка</th>
+      <th>Заголовок</th>
+      <th>Ссылка</th>
+      <th style="width: 90px;">Статус</th>
+      <th style="width: 240px;">Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="b : ${banners}">
+      <td><img class="thumb" style="width: 120px; height: 44px;" th:src="${b.image}" alt="" /></td>
+      <td th:text="${b.title != null and b.title != '' ? b.title : '—'}"></td>
+      <td class="muted" th:text="${b.link != null and b.link != '' ? b.link : '—'}"></td>
+      <td>
+        <span th:if="${b.active}" class="badge badge--on">Активен</span>
+        <span th:unless="${b.active}" class="badge badge--off">Скрыт</span>
+      </td>
+      <td>
+        <div class="actions">
+          <form class="inline-form" method="post" th:action="|/admin/banners/${b.id}/toggle|">
+            <button type="submit" class="btn btn--secondary btn--sm" th:text="${b.active ? 'Скрыть' : 'Показать'}"></button>
+          </form>
+          <form class="inline-form" method="post" th:action="|/admin/banners/${b.id}/delete|"
+                data-confirm="Удалить баннер?">
+            <button type="submit" class="btn btn--danger btn--sm">Удалить</button>
+          </form>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</th:block>
+</body>
+</html>

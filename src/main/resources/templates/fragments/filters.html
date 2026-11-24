@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Catalog filters (sorting is a separate select on the catalog page). -->
+<aside th:fragment="filters" class="catalog-filters">
+  <details class="filters-details" open>
+    <summary class="filters-details__summary" th:text="#{filters.summary}"></summary>
+
+    <form class="filters-form" method="GET" th:action="${filters.basePath}">
+      <div class="field">
+        <label for="f-q" th:text="#{filters.search}"></label>
+        <input type="search" id="f-q" name="q" th:value="${filters.q}" th:placeholder="#{filters.searchPlaceholder}" />
+      </div>
+
+      <div class="field">
+        <label for="f-category" th:text="#{filters.category}"></label>
+        <select id="f-category" name="category">
+          <option value="" th:text="#{filters.allCategories}"></option>
+          <option th:each="c : ${categories}" th:value="${c.slug}" th:selected="${filters.category == c.slug}"
+                  th:text="${c.getLocalizedName(lang)}"></option>
+        </select>
+      </div>
+
+      <div class="field field--row">
+        <div>
+          <label for="f-min" th:text="#{filters.priceFrom}"></label>
+          <input type="number" id="f-min" name="min" min="0" step="1" th:value="${filters.minText}" placeholder="0" />
+        </div>
+        <div>
+          <label for="f-max" th:text="#{filters.priceTo}"></label>
+          <input type="number" id="f-max" name="max" min="0" step="1" th:value="${filters.maxText}" placeholder="∞" />
+        </div>
+      </div>
+
+      <!-- keep the current sorting when filters are applied -->
+      <input type="hidden" name="sort" th:value="${filters.sort}" />
+
+      <div class="filters-form__actions">
+        <button type="submit" class="btn btn--primary" th:text="#{filters.apply}"></button>
+        <a th:href="${filters.basePath}" class="btn btn--ghost" th:text="#{filters.reset}"></a>
+      </div>
+    </form>
+  </details>
+
+  <div th:if="${filters.hasChips()}" class="filter-chips" th:aria-label="#{filters.chipsAria}">
+    <a th:if="${filters.activeCategory != null}" class="chip" th:href="${filters.urlWithout('category')}"><th:block th:text="${filters.activeCategory.getLocalizedName(lang)}"></th:block> <span aria-hidden="true">×</span></a>
+    <a th:if="${filters.minText != ''}" class="chip" th:href="${filters.urlWithout('min')}"><th:block th:text="|#{filters.from} ${filters.minText}|"></th:block> <span aria-hidden="true">×</span></a>
+    <a th:if="${filters.maxText != ''}" class="chip" th:href="${filters.urlWithout('max')}"><th:block th:text="|#{filters.to} ${filters.maxText}|"></th:block> <span aria-hidden="true">×</span></a>
+    <a th:if="${filters.q != ''}" class="chip" th:href="${filters.urlWithout('q')}"><th:block th:text="|«${filters.q}»|"></th:block> <span aria-hidden="true">×</span></a>
+  </div>
+</aside>
+</body>
+</html>

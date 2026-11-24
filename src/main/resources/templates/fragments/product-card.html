@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Product card used on the home page, in the catalog and in "related products". -->
+<article th:fragment="card(product)" class="product-card"
+         th:with="cardName=${product.getLocalizedName(lang)}, img=${product.mainImage}">
+  <a class="product-card__link" th:href="|/${lang}/products/${product.slug}|">
+    <div class="product-card__badges" th:if="${product.top}">
+      <span class="badge badge--top" th:text="#{card.top}"></span>
+    </div>
+    <div class="product-card__media">
+      <img th:if="${img != null}" th:src="${img.thumb}" th:alt="${cardName}" width="400" height="400" loading="lazy" />
+      <div th:if="${img == null}" class="product-card__placeholder" aria-hidden="true" th:text="#{card.noPhoto}"></div>
+    </div>
+    <div class="product-card__body">
+      <h3 class="product-card__name" th:text="${cardName}"></h3>
+      <p class="product-card__price" th:text="${@fmt.price(product.price)}"></p>
+    </div>
+  </a>
+</article>
+</body>
+</html>

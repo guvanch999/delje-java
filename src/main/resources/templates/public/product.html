@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<body>
+<th:block layout:fragment="content">
+<nav class="breadcrumbs container" th:aria-label="#{product.breadcrumbsAria}">
+  <a th:href="|/${lang}|" th:text="#{nav.home}"></a>
+  <span aria-hidden="true">/</span>
+  <a th:href="|/${lang}/products|" th:text="#{nav.catalog}"></a>
+  <th:block th:if="${product.category != null}">
+    <span aria-hidden="true">/</span>
+    <a th:href="|/${lang}/products?category=${product.category.slug}|" th:text="${product.category.getLocalizedName(lang)}"></a>
+  </th:block>
+</nav>
+
+<section class="product container">
+  <div class="product__gallery">
+    <th:block th:if="${!product.images.isEmpty()}">
+      <div class="product__main-image">
+        <!-- main product photo is the LCP element, load it right away -->
+        <img id="product-main-image" th:src="${product.images[0].full}" th:alt="${productName}" width="1600" height="1600" loading="eager" fetchpriority="high" />
+      </div>
+      <ul th:if="${product.images.size() > 1}" class="product__thumbs">
+        <li th:each="img, st : ${product.images}">
+          <button type="button" class="product__thumb" th:classappend="${st.first} ? 'is-active'" th:data-full="${img.full}" th:data-alt="${productName}">
+            <img th:src="${img.thumb}" th:alt="|${productName} — #{product.photoAlt} ${st.count}|" width="400" height="400" loading="lazy" />
+          </button>
+        </li>
+      </ul>
+    </th:block>
+    <div th:if="${product.images.isEmpty()}" class="product__main-image product__main-image--empty" aria-hidden="true" th:text="#{product.noPhoto}"></div>
+  </div>
+
+  <div class="product__info">
+    <h1 class="product__name" th:text="${productName}"></h1>
+
+    <div class="product__price-block">
+      <p class="product__price" th:text="${@fmt.price(product.price)}"></p>
+      <a class="btn btn--primary btn--lg product__cta" th:href="|/${lang}/contact|"><th:block th:text="#{product.cta}"></th:block> <span aria-hidden="true">→</span></a>
+    </div>
+
+    <p th:if="${product.category != null}" class="product__category muted"><th:block th:text="#{product.category}"></th:block> <a th:href="|/${lang}/products?category=${product.category.slug}|" th:text="${product.category.getLocalizedName(lang)}"></a></p>
+
+    <div th:if="${productDescription != ''}" class="product__description">
+      <h2 th:text="#{product.description}"></h2>
+      <p th:text="${productDescription}"></p>
+    </div>
+  </div>
+</section>
+
+<section th:if="${!related.isEmpty()}" class="home-section container">
+  <div class="home-section__head">
+    <h2 th:text="#{product.related}"></h2>
+  </div>
+  <div class="product-grid">
+    <th:block th:each="product : ${related}"><article th:replace="~{fragments/product-card :: card(${product})}"></article></th:block>
+  </div>
+</section>
+
+<script defer src="/static/js/product.js"></script>
+</th:block>
+</body>
+</html>

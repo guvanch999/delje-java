@@ -1,0 +1,24 @@
+target/
+
+# secrets
+.env
+server-secrets/
+
+# runtime data
+uploads/*
+!uploads/products/
+uploads/products/*
+!uploads/products/.gitkeep
+backups/*
+!backups/.gitkeep
+
+# logs
+*.log
+logs/
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db

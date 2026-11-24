@@ -1,0 +1,27 @@
+[Unit]
+Description=DELJE shop (Spring Boot)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=delje
+Group=delje
+WorkingDirectory=/opt/delje
+EnvironmentFile=/opt/delje/.env
+# heap sized for a 1 GB server that also runs PostgreSQL and nginx
+ExecStart=/usr/bin/java -Xms128m -Xmx384m -XX:+UseSerialGC -jar /opt/delje/delje.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=5
+TimeoutStopSec=40
+
+# hardening: the app only writes to its upload and backup folders
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/delje/uploads /opt/delje/backups
+
+[Install]
+WantedBy=multi-user.target

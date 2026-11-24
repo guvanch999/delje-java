@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin}">
+<body>
+<th:block layout:fragment="content">
+<h1 th:text="${category != null ? 'Редактирование категории' : 'Новая категория'}"></h1>
+
+<div th:if="${error != null}" class="flash flash--error" th:text="${error}"></div>
+
+<form class="card" method="post"
+      th:action="${category != null ? '/admin/categories/' + category.id : '/admin/categories'}">
+  <div class="field" th:classappend="${error != null} ? 'inline-error'">
+    <label for="name">Название (RU)</label>
+    <input type="text" id="name" name="name" th:value="${values.name}" autofocus />
+    <div class="hint">Slug сгенерируется автоматически из русского названия.</div>
+  </div>
+
+  <div class="field">
+    <label for="nameTk">Название (TK)</label>
+    <input type="text" id="nameTk" name="nameTk" th:value="${values.nameTk}" />
+    <div class="hint">Туркменский перевод. Если пусто — на витрине покажется русское название.</div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn--primary">Сохранить</button>
+    <a class="btn btn--secondary" href="/admin/categories">Отмена</a>
+  </div>
+</form>
+</th:block>
+</body>
+</html>

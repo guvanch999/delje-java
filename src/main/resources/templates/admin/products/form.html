@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin}">
+<body>
+<th:block layout:fragment="content">
+<h1 th:text="${product != null ? 'Редактирование товара' : 'Новый товар'}"></h1>
+
+<div th:if="${error != null}" class="flash flash--error" th:text="${error}"></div>
+
+<!-- csrf token is also in the URL: it must survive a rejected (too large) upload -->
+<form class="card" method="post" enctype="multipart/form-data"
+      th:action="${product != null} ? @{/admin/products/{id}(id=${product.id},_csrf=${_csrf.token})} : @{/admin/products(_csrf=${_csrf.token})}">
+  <div class="field" th:classappend="${error != null} ? 'inline-error'">
+    <label for="name">Название (RU)</label>
+    <input type="text" id="name" name="name" th:value="${values.name}" autofocus />
+  </div>
+
+  <div class="field">
+    <label for="nameTk">Название (TK)</label>
+    <input type="text" id="nameTk" name="nameTk" th:value="${values.nameTk}" />
+    <div class="hint">Туркменский перевод. Если пусто — на витрине покажется русское название.</div>
+  </div>
+
+  <div class="field">
+    <label for="description">Описание (RU)</label>
+    <textarea id="description" name="description" th:text="${values.description}"></textarea>
+  </div>
+
+  <div class="field">
+    <label for="descriptionTk">Описание (TK)</label>
+    <textarea id="descriptionTk" name="descriptionTk" th:text="${values.descriptionTk}"></textarea>
+    <div class="hint">Туркменский перевод. Если пусто — покажется русское описание.</div>
+  </div>
+
+  <div class="field">
+    <label for="price">Цена, ₽</label>
+    <input type="number" id="price" name="price" step="0.01" min="0" th:value="${values.price}" />
+  </div>
+
+  <div class="field">
+    <label for="categoryId">Категория</label>
+    <select id="categoryId" name="categoryId">
+      <option value="">— не выбрана —</option>
+      <option th:each="c : ${categories}" th:value="${c.id}" th:selected="${values.categoryId == c.id.toString()}" th:text="${c.name}"></option>
+    </select>
+  </div>
+
+  <div class="field checkbox">
+    <input type="checkbox" id="isTop" name="isTop" value="1" th:checked="${values.isTop}" />
+    <label for="isTop">Хит продаж (показывать в топе)</label>
+  </div>
+
+  <div th:if="${product != null and !images.isEmpty()}" class="field">
+    <label>Текущие картинки</label>
+    <div class="images-grid">
+      <div th:each="img : ${images}" class="image-item">
+        <img th:src="${img.thumb}" alt="" />
+        <label>
+          <input type="checkbox" name="deleteImageIds" th:value="${img.id}" />
+          удалить
+        </label>
+      </div>
+    </div>
+    <div class="hint">Отметьте картинки, которые нужно удалить при сохранении.</div>
+  </div>
+
+  <div class="field">
+    <label for="images" th:text="${product != null ? 'Добавить картинки' : 'Картинки'}"></label>
+    <input type="file" id="images" name="images" accept="image/*" multiple />
+    <div class="hint">Можно выбрать несколько. Каждая будет обработана в WebP (превью 400×400 и полный 1600).</div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn--primary">Сохранить</button>
+    <a class="btn btn--secondary" href="/admin/products">Отмена</a>
+  </div>
+</form>
+</th:block>
+</body>
+</html>

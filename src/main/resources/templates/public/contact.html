@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<body>
+<th:block layout:fragment="content">
+<section class="page container">
+  <p class="eyebrow" th:text="#{contact.eyebrow}"></p>
+  <h1 th:text="#{contact.title}"></h1>
+
+  <div class="contact__layout">
+    <div class="contact__info">
+      <h2 th:text="#{contact.infoTitle}"></h2>
+      <ul class="contact__list">
+        <li><strong th:text="|#{contact.phone}:|"></strong> <a href="tel:+99312000000">+993 12 00-00-00</a></li>
+        <li><strong th:text="|#{contact.email}:|"></strong> <a href="mailto:info@example.com">info@example.com</a></li>
+        <li><strong th:text="|#{contact.address}:|"></strong> <th:block th:text="#{contact.addressValue}"></th:block></li>
+      </ul>
+    </div>
+
+    <div class="contact__form-wrap">
+      <p th:if="${sent}" class="flash flash--success" th:text="#{contact.success}"></p>
+      <p th:if="${error != null}" class="flash flash--error" th:text="${error}"></p>
+
+      <form class="contact-form" method="POST" th:action="|/${lang}/contact|">
+        <div class="field">
+          <label for="c-name" th:text="#{contact.nameLabel}"></label>
+          <input type="text" id="c-name" name="name" th:value="${values.name}" maxlength="100" required />
+        </div>
+        <div class="field">
+          <label for="c-email" th:text="#{contact.emailLabel}"></label>
+          <input type="email" id="c-email" name="email" th:value="${values.email}" maxlength="200" required />
+        </div>
+        <div class="field">
+          <label for="c-message" th:text="#{contact.messageLabel}"></label>
+          <textarea id="c-message" name="message" rows="5" maxlength="5000" required th:text="${values.message}"></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary" th:text="#{contact.submit}"></button>
+      </form>
+    </div>
+  </div>
+</section>
+</th:block>
+</body>
+</html>

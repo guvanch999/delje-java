@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<body>
+<th:block layout:fragment="content">
+<section class="home-hero theme-dark">
+  <h1 class="visually-hidden" th:text="#{home.h1}"></h1>
+
+  <div th:if="${!heroSlides.isEmpty()}" class="hero" data-hero>
+    <div class="hero__track">
+      <div th:each="slide, st : ${heroSlides}" class="hero__slide" th:classappend="${st.first} ? 'is-active'" data-hero-slide>
+        <p class="eyebrow hero__eyebrow" data-hero-anim th:text="#{${slide.eyebrowKey}}"></p>
+        <h2 class="hero__title" data-hero-anim th:text="${slide.title}"></h2>
+        <p class="hero__lead" data-hero-anim th:text="#{home.heroLead}"></p>
+        <div class="hero__actions" data-hero-anim>
+          <a class="btn btn--primary btn--lg" th:href="${slide.href}">
+            <span th:text="#{${slide.ctaKey}}"></span> <span aria-hidden="true">→</span>
+          </a>
+          <a class="btn btn--ghost btn--lg hero__ig" href="https://instagram.com/delje_brand" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+            @delje_brand
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div th:if="${!heroArch.isEmpty()}" class="hero__collage" aria-hidden="true">
+      <span th:each="thumb, st : ${heroArch}" class="hero__arch"
+            th:classappend="${st.index == 1 ? 'hero\_\_arch--center' : (st.index == 2 ? 'hero\_\_arch--last' : '')}">
+        <img th:src="${thumb}" alt="" width="400" height="400" th:attr="loading=${st.first ? 'eager' : 'lazy'}" />
+      </span>
+    </div>
+
+    <div th:if="${heroSlides.size() > 1}" class="hero__bullets" data-hero-bullets th:aria-label="#{home.slidesAria}"></div>
+  </div>
+
+  <div th:if="${heroSlides.isEmpty()}" class="hero hero--fallback">
+    <div class="hero__track">
+      <div class="hero__slide is-active" data-hero-slide>
+        <p class="eyebrow hero__eyebrow" th:text="#{home.eyebrow.collection}"></p>
+        <h2 class="hero__title" th:utext="#{home.heroFallbackTitleHtml}"></h2>
+        <p class="hero__lead" th:text="#{home.heroFallbackLead}"></p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" th:href="|/${lang}/products|"><span th:text="#{home.heroFallbackCta}"></span> <span aria-hidden="true">→</span></a>
+          <a class="btn btn--ghost btn--lg hero__ig" href="https://instagram.com/delje_brand" target="_blank" rel="noopener">@delje_brand</a>
+        </div>
+      </div>
+    </div>
+    <div th:if="${!heroArch.isEmpty()}" class="hero__collage" aria-hidden="true">
+      <span th:each="thumb, st : ${heroArch}" class="hero__arch"
+            th:classappend="${st.index == 1 ? 'hero\_\_arch--center' : (st.index == 2 ? 'hero\_\_arch--last' : '')}">
+        <img th:src="${thumb}" alt="" width="400" height="400" loading="lazy" />
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- Advantages -->
+<section class="home-section container" th:aria-label="#{home.advantagesAria}">
+  <div class="advantages">
+    <div class="adv-item" data-reveal>
+      <span class="adv-item__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </span>
+      <div>
+        <h3 th:text="#{home.adv.deliveryTitle}"></h3>
+        <p th:text="#{home.adv.deliveryText}"></p>
+      </div>
+    </div>
+    <div class="adv-item" data-reveal>
+      <span class="adv-item__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </span>
+      <div>
+        <h3 th:text="#{home.adv.supportTitle}"></h3>
+        <p th:text="#{home.adv.supportText}"></p>
+      </div>
+    </div>
+    <div class="adv-item" data-reveal>
+      <span class="adv-item__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5M4 9v11h16V9M9 13h6"/></svg>
+      </span>
+      <div>
+        <h3 th:text="#{home.adv.orderTitle}"></h3>
+        <p th:text="#{home.adv.orderText}"></p>
+      </div>
+    </div>
+    <div class="adv-item" data-reveal>
+      <span class="adv-item__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+      </span>
+      <div>
+        <h3 th:text="#{home.adv.exclusiveTitle}"></h3>
+        <p th:text="#{home.adv.exclusiveText}"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories (bento) -->
+<section th:if="${!categoryTiles.isEmpty()}" class="home-section container">
+  <div class="home-section__head">
+    <div>
+      <p class="eyebrow" th:text="#{home.categoriesEyebrow}"></p>
+      <h2 th:utext="#{home.categoriesTitleHtml}"></h2>
+    </div>
+    <a class="home-section__more" th:href="|/${lang}/products|" th:text="#{home.allCatalog}"></a>
+  </div>
+  <div class="bento">
+    <a th:each="category, st : ${categoryTiles}" class="bento__tile" th:classappend="${st.first} ? 'bento\_\_tile--lead'"
+       th:href="|/${lang}/products?category=${category.slug}|" data-reveal>
+      <img th:if="${category.cover != null}" class="bento__img" th:src="${category.cover}" alt="" width="400" height="400" loading="lazy" />
+      <span class="bento__overlay" aria-hidden="true"></span>
+      <span class="bento__meta">
+        <span class="bento__name" th:text="${category.name}"></span>
+        <span class="bento__count" th:text="${@fmt.count(category.count, lang)}"></span>
+      </span>
+    </a>
+  </div>
+</section>
+
+<section th:if="${!topProducts.isEmpty()}" class="home-section container">
+  <div class="home-section__head">
+    <div>
+      <p class="eyebrow" th:text="#{home.topEyebrow}"></p>
+      <h2 th:utext="#{home.topTitleHtml}"></h2>
+    </div>
+    <a class="home-section__more" th:href="|/${lang}/products|" th:text="#{home.allCatalog}"></a>
+  </div>
+  <div class="product-grid">
+    <th:block th:each="product : ${topProducts}"><article th:replace="~{fragments/product-card :: card(${product})}"></article></th:block>
+  </div>
+</section>
+
+<!-- Full-width call to action -->
+<section class="cta-band" data-reveal>
+  <div class="container cta-band__inner">
+    <p class="cta-band__slogan" th:text="#{home.ctaSlogan}"></p>
+    <a class="btn btn--lg cta-band__btn" th:href="|/${lang}/contact|"><span th:text="#{home.ctaButton}"></span> <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<section th:if="${!newProducts.isEmpty()}" class="home-section container">
+  <div class="home-section__head">
+    <div>
+      <p class="eyebrow" th:text="#{home.newEyebrow}"></p>
+      <h2 th:utext="#{home.newTitleHtml}"></h2>
+    </div>
+    <a class="home-section__more" th:href="|/${lang}/products?sort=new|" th:text="#{home.seeAll}"></a>
+  </div>
+  <div class="product-grid">
+    <th:block th:each="product : ${newProducts}"><article th:replace="~{fragments/product-card :: card(${product})}"></article></th:block>
+  </div>
+</section>
+
+<!-- Instagram block -->
+<section th:if="${!igTiles.isEmpty()}" class="home-section container">
+  <div class="ig-block" data-reveal>
+    <div class="ig-block__head">
+      <p class="eyebrow" th:text="#{home.igEyebrow}"></p>
+      <h2 th:utext="#{home.igTitleHtml}"></h2>
+      <p class="muted" th:text="#{home.igMuted}"></p>
+      <a class="btn btn--primary btn--lg ig-block__cta" href="https://instagram.com/delje_brand" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+        <span th:text="#{home.igButton}"></span>
+      </a>
+    </div>
+    <div class="ig-block__grid">
+      <a th:each="thumb : ${igTiles}" class="ig-block__tile" href="https://instagram.com/delje_brand" target="_blank" rel="noopener" th:aria-label="#{home.igTileAria}">
+        <img th:src="${thumb}" alt="" width="400" height="400" loading="lazy" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<script defer src="/static/js/home.js"></script>
+</th:block>
+</body>
+</html>

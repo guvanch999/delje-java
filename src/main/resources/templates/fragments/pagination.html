@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Page links keep all current filters, only the page number changes. -->
+<nav th:fragment="pagination" th:if="${totalPages > 1}" class="pagination" th:aria-label="#{pagination.aria}">
+  <a th:if="${page > 1}" class="pagination__link" th:href="${filters.pageUrl(page - 1)}" rel="prev" th:text="#{pagination.prev}"></a>
+  <span th:unless="${page > 1}" class="pagination__link is-disabled" aria-disabled="true" th:text="#{pagination.prev}"></span>
+
+  <th:block th:each="n : ${#numbers.sequence(1, totalPages)}">
+    <span th:if="${n == page}" class="pagination__link is-current" aria-current="page" th:text="${n}"></span>
+    <a th:unless="${n == page}" class="pagination__link" th:href="${filters.pageUrl(n)}" th:text="${n}"></a>
+  </th:block>
+
+  <a th:if="${page < totalPages}" class="pagination__link" th:href="${filters.pageUrl(page + 1)}" rel="next" th:text="#{pagination.next}"></a>
+  <span th:unless="${page < totalPages}" class="pagination__link is-disabled" aria-disabled="true" th:text="#{pagination.next}"></span>
+</nav>
+</body>
+</html>

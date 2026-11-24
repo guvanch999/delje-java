@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title th:text="${title != null ? title : 'Админка'}">Админка</title>
+  <link rel="stylesheet" href="/static/admin.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">Админка</div>
+    <nav>
+      <a href="/admin/products">Товары</a>
+      <a href="/admin/categories">Категории</a>
+      <a href="/admin/banners">Баннеры</a>
+    </nav>
+    <div class="logout">
+      <form method="post" th:action="@{/admin/logout}">
+        <button type="submit">Выйти</button>
+      </form>
+    </div>
+  </aside>
+  <main class="content">
+    <div th:if="${flash != null}" class="flash" th:classappend="|flash--${flash.type}|" th:text="${flash.text}"></div>
+    <th:block layout:fragment="content"></th:block>
+  </main>
+  <script>
+    document.querySelectorAll('form[data-confirm]').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        if (!confirm(form.getAttribute('data-confirm'))) e.preventDefault();
+      });
+    });
+  </script>
+</body>
+</html>

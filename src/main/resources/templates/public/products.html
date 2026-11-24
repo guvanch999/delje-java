@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<body>
+<th:block layout:fragment="content">
+<section class="catalog container">
+  <header class="catalog__head">
+    <h1 th:text="#{catalog.title}"></h1>
+    <p class="muted" th:text="${@fmt.count(count, lang)}"></p>
+  </header>
+
+  <div class="catalog__layout">
+    <aside th:replace="~{fragments/filters :: filters}"></aside>
+
+    <div class="catalog__content">
+      <div class="catalog__toolbar">
+        <button class="btn btn--ghost filters-toggle" type="button" data-filters-toggle th:aria-label="#{catalog.filtersToggleAria}" th:text="#{catalog.filters}"></button>
+        <form class="sort-form" method="GET" th:action="${filters.basePath}">
+          <!-- keep active filters when the sorting changes -->
+          <input th:if="${filters.category != ''}" type="hidden" name="category" th:value="${filters.category}" />
+          <input th:if="${filters.minText != ''}" type="hidden" name="min" th:value="${filters.minText}" />
+          <input th:if="${filters.maxText != ''}" type="hidden" name="max" th:value="${filters.maxText}" />
+          <input th:if="${filters.q != ''}" type="hidden" name="q" th:value="${filters.q}" />
+          <label for="sort" th:text="#{catalog.sort}"></label>
+          <select id="sort" name="sort" onchange="this.form.submit()">
+            <option th:each="opt : ${sortOptions}" th:value="${opt}" th:selected="${filters.sort == opt}" th:text="#{${'sort.' + opt}}"></option>
+          </select>
+        </form>
+      </div>
+
+      <div th:if="${items.isEmpty()}" class="empty">
+        <p class="empty__title" th:text="#{catalog.emptyTitle}"></p>
+        <p class="muted" th:text="#{catalog.emptyText}"></p>
+        <a th:href="${filters.basePath}" class="btn btn--primary" th:text="#{catalog.emptyReset}"></a>
+      </div>
+      <th:block th:unless="${items.isEmpty()}">
+        <div class="product-grid">
+          <th:block th:each="product : ${items}"><article th:replace="~{fragments/product-card :: card(${product})}"></article></th:block>
+        </div>
+
+        <nav th:replace="~{fragments/pagination :: pagination}"></nav>
+      </th:block>
+    </div>
+  </div>
+</section>
+</th:block>
+</body>
+</html>
